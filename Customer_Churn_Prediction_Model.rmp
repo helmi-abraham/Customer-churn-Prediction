@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="10.5.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="10.5.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="10.5.000" expanded="true" height="68" name="Retrieve telecom_customer_churn" width="90" x="45" y="85">
+        <parameter key="repository_entry" value="//Local Repository/telecom_customer_churn"/>
+      </operator>
+      <operator activated="true" class="numerical_to_polynominal" compatibility="10.5.000" expanded="true" height="82" name="Numerical to Polynominal (2)" width="90" x="179" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Zip Code"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="nominal_to_binominal" compatibility="10.5.000" expanded="true" height="103" name="Nominal to Binominal" width="90" x="313" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Gender|Internet Service|Married|Phone Service|Multiple Lines|Online Backup|Online Security|Paperless Billing|Device Protection Plan|Streaming Music|Streaming Movies|Streaming TV|Unlimited Data|Premium Tech Support"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="transform_binominal" value="false"/>
+        <parameter key="use_underscore_in_name" value="false"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="10.5.000" expanded="true" height="68" name="Retrieve telecom_zipcode_population" width="90" x="45" y="238">
+        <parameter key="repository_entry" value="//Local Repository/telecom_zipcode_population"/>
+      </operator>
+      <operator activated="true" class="numerical_to_polynominal" compatibility="10.5.000" expanded="true" height="82" name="Numerical to Polynominal" width="90" x="179" y="238">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Zip Code"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="10.5.000" expanded="true" height="82" name="Join" width="90" x="447" y="187">
+        <parameter key="remove_double_attributes" value="true"/>
+        <parameter key="join_type" value="left"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="Zip Code" value="Zip Code"/>
+        </list>
+        <parameter key="keep_both_join_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:generate_id" compatibility="10.5.000" expanded="true" height="82" name="Generate ID" width="90" x="581" y="136">
+        <parameter key="create_nominal_ids" value="true"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="Senior_Citizen Indicator" width="90" x="715" y="85">
+        <list key="function_descriptions">
+          <parameter key="Senior_citizen" value="if(Age &gt; 65 , 1, 0)"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="Europe/Dublin"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="10.5.000" expanded="true" height="103" name="Replace Missing Values" width="90" x="849" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Internet Type"/>
+        <parameter key="attributes" value="Internet Type"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="value"/>
+        <list key="columns">
+          <parameter key="Internet Type" value="value"/>
+        </list>
+        <parameter key="replenishment_value" value="None"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="10.5.000" expanded="true" height="103" name="Replace Missing Values (2)" width="90" x="983" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Multiple Lines|Online Backup|Online Security|Device Protection Plan|Premium Tech Support|Streaming Music|Streaming Movies|Streaming TV|Unlimited Data"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="value"/>
+        <list key="columns">
+          <parameter key="Premium Tech Support" value="value"/>
+          <parameter key="Multiple Lines" value="value"/>
+          <parameter key="Online Security" value="value"/>
+          <parameter key="Online Backup" value="value"/>
+          <parameter key="Device Protection Plan" value="value"/>
+          <parameter key="Streaming Music" value="value"/>
+          <parameter key="Streaming TV" value="value"/>
+          <parameter key="Unlimited Data" value="value"/>
+          <parameter key="Streaming Movies" value="value"/>
+        </list>
+        <parameter key="replenishment_value" value="No"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="10.5.000" expanded="true" height="103" name="Replace Missing Values (4)" width="90" x="1117" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Avg Monthly GB Download|Avg Monthly Long Distance Charges"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="default" value="zero"/>
+        <list key="columns"/>
+      </operator>
+      <operator activated="true" class="blending:rename" compatibility="10.5.000" expanded="true" height="82" name="Rename" width="90" x="1251" y="85">
+        <list key="rename attributes">
+          <parameter key="Total Refunds" value="Total_Refunds"/>
+          <parameter key="Total Extra Data Charges" value="Total_Extra_Data_Charges"/>
+          <parameter key="Avg Monthly GB Download" value="Avg_Monthly_GB_Download"/>
+          <parameter key="Avg Monthly Long Distance Charges" value="Avg_Monthly_Long_Distance_Charges"/>
+          <parameter key="Total Long Distance Charges" value="Total_Long_Distance_Charges"/>
+        </list>
+        <parameter key="from_attribute" value=""/>
+        <parameter key="to_attribute" value=""/>
+      </operator>
+      <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="Generate Attributes" width="90" x="1385" y="85">
+        <list key="function_descriptions">
+          <parameter key="Refund_Indicator" value="if(Total_Refunds &gt; 0,1,0)"/>
+          <parameter key="Extra_Data_Charge_Indicator" value="if(Total_Extra_Data_Charges &gt; 0,1,0)"/>
+          <parameter key="Total_Long_Distance_Charges_indicator" value="if(Total_Long_Distance_Charges &gt; 0 , 1, 0)"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="Europe/Dublin"/>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="10.5.000" expanded="true" height="103" name="Nominal to Numerical" width="90" x="1519" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Device Protection Plan|Internet Service|Multiple Lines|Online Backup|Online Security|Paperless Billing|Phone Service|Premium Tech Support|Streaming Movies|Streaming Music|Streaming TV|Unlimited Data"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="nominal"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="file_path"/>
+        <parameter key="block_type" value="single_value"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="single_value"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="coding_type" value="dummy coding"/>
+        <parameter key="use_comparison_groups" value="false"/>
+        <list key="comparison_groups"/>
+        <parameter key="unexpected_value_handling" value="all 0 and warning"/>
+        <parameter key="use_underscore_in_name" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:rename" compatibility="10.5.000" expanded="true" height="82" name="Rename (2)" width="90" x="1653" y="85">
+        <list key="rename attributes">
+          <parameter key="Device Protection Plan = Yes" value="protection_plan_indicator"/>
+          <parameter key="Internet Service = Yes" value="Internet_Service_indicator"/>
+          <parameter key="Multiple Lines = Yes" value="Multiple_Lines_indicator"/>
+          <parameter key="Online Backup = Yes" value="Online_Backup_indicator"/>
+          <parameter key="Online Security = Yes" value="Online_Security_indicator"/>
+          <parameter key="Paperless Billing = Yes" value="Paperless_Billing_indicator"/>
+          <parameter key="Phone Service = Yes" value="Phone_Service_Indicator"/>
+          <parameter key="Unlimited Data = Yes" value="Unlimited_Data_Indicator"/>
+          <parameter key="Streaming TV = Yes" value="Streaming_TV_Indicator"/>
+          <parameter key="Premium Tech Support = Yes" value="Premium_Tech_Support_indicator"/>
+          <parameter key="Streaming Movies = Yes" value="Streaming_Movies_Indicator"/>
+          <parameter key="Streaming Music = Yes" value="Streaming_Music_Indicator"/>
+        </list>
+        <parameter key="from_attribute" value=""/>
+        <parameter key="to_attribute" value=""/>
+      </operator>
+      <operator activated="true" class="guess_types" compatibility="10.5.000" expanded="true" height="82" name="Guess Types" width="90" x="1787" y="85">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Extra_Data_Charge_Indicator|Internet_Service_indicator|Multiple_Lines_indicator|Online_Backup_indicator|Online_Security _indicator|Paperless_Billing_indicator|Phone_Service_Indicator|Premium_Tech_Support _indicator|protection_plan _indicator|Streaming_Movies_Indicator|Streaming_Music_Indicator|Streaming_TV_Indicator|Unlimited_Data_Indicator"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="attribute_value"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="time"/>
+        <parameter key="block_type" value="attribute_block"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_matrix_row_start"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="decimal_point_character" value="."/>
+      </operator>
+      <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="compute number of service" width="90" x="1921" y="85">
+        <list key="function_descriptions">
+          <parameter key="Total_number_of_services_opted" value="Multiple_Lines_indicator+Internet_Service_indicator+Online_Backup_indicator+Paperless_Billing_indicator+Online_Security_indicator+Phone_Service_Indicator+Premium_Tech_Support_indicator+Unlimited_Data_Indicator+Streaming_TV_Indicator+Streaming_Music_Indicator+Streaming_Movies_Indicator+protection_plan_indicator"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="Europe/Dublin"/>
+      </operator>
+      <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="Generate Attributes (2)" width="90" x="2055" y="85">
+        <list key="function_descriptions">
+          <parameter key="Credit_card_payment_inidcator" value="if([Payment Method] == &quot;Credit Card&quot;, 1, 0)"/>
+          <parameter key="Bank_withrawal_payment_Indicator" value="if([Payment Method] == &quot;Bank Withdrawal&quot;, 1, 0)"/>
+          <parameter key="Mailed_Check_payment_Indicator" value="if([Payment Method] == &quot;Mailed Check&quot;, 1, 0)"/>
+          <parameter key="Yearly_contract_Indicator" value="if(Contract == &quot;One Year&quot;, 1,0)"/>
+          <parameter key="Monthly_contract_Indicator" value="if(Contract == &quot;Month-to-Month&quot;, 1,0)"/>
+          <parameter key="Two_year_contract_Indicator" value="if(Contract == &quot;Two Year&quot;, 1,0)"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="Europe/Dublin"/>
+      </operator>
+      <operator activated="true" class="discretize_by_user_specification" compatibility="10.5.000" expanded="true" height="103" name="Discretize" width="90" x="2189" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Age"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <list key="classes">
+          <parameter key="Young Adults" value="25.0"/>
+          <parameter key="Adults" value="45.0"/>
+          <parameter key="Seniors" value="65.0"/>
+          <parameter key="Senior Citizen" value="Infinity"/>
+        </list>
+      </operator>
+      <operator activated="true" class="discretize_by_user_specification" compatibility="10.5.000" expanded="true" height="103" name="Discretize (2)" width="90" x="2457" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Avg_Monthly_GB_Download"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <list key="classes">
+          <parameter key="Normal Internet Usage" value="35.0"/>
+          <parameter key="Medium Internet Usage" value="70.0"/>
+          <parameter key="High Internet Usage" value="Infinity"/>
+        </list>
+      </operator>
+      <operator activated="true" class="discretize_by_bins" compatibility="10.5.000" expanded="true" height="103" name="Discretize (3)" width="90" x="2591" y="85">
+        <parameter key="return_preprocessing_model" value="false"/>
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attribute" value=""/>
+        <parameter key="attributes" value="Avg_Monthly_Long_Distance_Charges|Monthly Charge|Total Charges|Total Revenue|Total_Extra_Data_Charges|Total_Long_Distance_Charges"/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="number_of_bins" value="6"/>
+        <parameter key="define_boundaries" value="false"/>
+        <parameter key="range_name_type" value="interval"/>
+        <parameter key="automatic_number_of_digits" value="true"/>
+        <parameter key="number_of_digits" value="3"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="10.5.000" expanded="true" height="103" name="Filter Examples" width="90" x="2725" y="85">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="Customer Status.does_not_equal.Joined"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="blending:generate_columns" compatibility="10.5.000" expanded="true" height="82" name="Generate Attributes (3)" width="90" x="2859" y="85">
+        <list key="function_descriptions">
+          <parameter key="Churn_Status" value="if([Customer Status]==&quot;Churned&quot;,1,0)"/>
+        </list>
+        <parameter key="keep_all_columns" value="true"/>
+        <parameter key="default_time_zone" value="Europe/London"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="10.5.000" expanded="true" height="82" name="Numerical to Binominal" width="90" x="2993" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Churn_Status"/>
+        <parameter key="attributes" value=""/>
+        <parameter key="use_except_expression" value="false"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="use_value_type_exception" value="false"/>
+        <parameter key="except_value_type" value="real"/>
+        <parameter key="block_type" value="value_series"/>
+        <parameter key="use_block_type_exception" value="false"/>
+        <parameter key="except_block_type" value="value_series_end"/>
+        <parameter key="invert_selection" value="false"/>
+        <parameter key="include_special_attributes" value="false"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="blending:set_role" compatibility="10.5.000" expanded="true" height="82" name="Set Role" width="90" x="3127" y="85">
+        <list key="set_roles">
+          <parameter key="Churn_Status" value="label"/>
+        </list>
+      </operator>
+      <operator activated="true" class="shuffle" compatibility="10.5.000" expanded="true" height="82" name="Shuffle" width="90" x="3261" y="85">
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="10.5.000" expanded="true" height="82" name="Select Attributes" width="90" x="3395" y="85">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="a subset"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="Age␞Avg_Monthly_GB_Download␞Avg_Monthly_Long_Distance_Charges␞Bank_withrawal_payment_Indicator␞Churn_Status␞City␞Credit_card_payment_inidcator␞Customer ID␞Extra_Data_Charge_Indicator␞Gender␞Internet Type␞Internet_Service_indicator␞Mailed_Check_payment_Indicator␞Married␞Monthly_contract_Indicator␞Multiple_Lines_indicator␞Number of Dependents␞Number of Referrals␞Offer␞Online_Backup_indicator␞Online_Security_indicator␞Paperless_Billing_indicator␞Phone_Service_Indicator␞Premium_Tech_Support_indicator␞protection_plan_indicator␞Refund_Indicator␞Senior_citizen␞Streaming_Movies_Indicator␞Streaming_Music_Indicator␞Streaming_TV_Indicator␞Tenure in Months␞Total Charges␞Total Revenue␞Total_Extra_Data_Charges␞Total_Long_Distance_Charges_indicator␞Total_number_of_services_opted␞Two_year_contract_Indicator␞Unlimited_Data_Indicator␞Yearly_contract_Indicator"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="10.5.000" expanded="true" height="103" name="Multiply (2)" width="90" x="3529" y="85"/>
+      <operator activated="true" class="compare_rocs" compatibility="10.5.000" expanded="true" height="82" name="Compare ROCs" width="90" x="3663" y="238">
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="split_ratio" value="0.7"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="use_example_weights" value="true"/>
+        <parameter key="roc_bias" value="optimistic"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.5.000" expanded="true" height="103" name="Decision Tree (5)" width="90" x="246" y="85">
+            <parameter key="criterion" value="gain_ratio"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="apply_pruning" value="true"/>
+            <parameter key="confidence" value="0.1"/>
+            <parameter key="apply_prepruning" value="true"/>
+            <parameter key="minimal_gain" value="0.01"/>
+            <parameter key="minimal_leaf_size" value="2"/>
+            <parameter key="minimal_size_for_split" value="4"/>
+            <parameter key="number_of_prepruning_alternatives" value="3"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_random_forest" compatibility="10.5.000" expanded="true" height="103" name="Random Forest (3)" width="90" x="246" y="391">
+            <parameter key="number_of_trees" value="100"/>
+            <parameter key="criterion" value="gain_ratio"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="confidence" value="0.1"/>
+            <parameter key="apply_prepruning" value="false"/>
+            <parameter key="minimal_gain" value="0.01"/>
+            <parameter key="minimal_leaf_size" value="2"/>
+            <parameter key="minimal_size_for_split" value="4"/>
+            <parameter key="number_of_prepruning_alternatives" value="3"/>
+            <parameter key="random_splits" value="false"/>
+            <parameter key="guess_subset_ratio" value="true"/>
+            <parameter key="subset_ratio" value="0.2"/>
+            <parameter key="voting_strategy" value="confidence vote"/>
+            <parameter key="use_local_random_seed" value="false"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+          </operator>
+          <operator activated="true" class="h2o:gradient_boosted_trees" compatibility="10.3.001" expanded="true" height="103" name="Gradient Boosted Trees" width="90" x="246" y="238">
+            <parameter key="number_of_trees" value="50"/>
+            <parameter key="reproducible" value="false"/>
+            <parameter key="maximum_number_of_threads" value="4"/>
+            <parameter key="use_local_random_seed" value="false"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="maximal_depth" value="5"/>
+            <parameter key="min_rows" value="10.0"/>
+            <parameter key="min_split_improvement" value="1.0E-5"/>
+            <parameter key="number_of_bins" value="20"/>
+            <parameter key="learning_rate" value="0.01"/>
+            <parameter key="sample_rate" value="1.0"/>
+            <parameter key="distribution" value="AUTO"/>
+            <parameter key="early_stopping" value="false"/>
+            <parameter key="stopping_rounds" value="1"/>
+            <parameter key="stopping_metric" value="AUTO"/>
+            <parameter key="stopping_tolerance" value="0.001"/>
+            <list key="monotone_constraints"/>
+            <parameter key="max_runtime_seconds" value="0"/>
+            <list key="expert_parameters"/>
+          </operator>
+          <connect from_port="train 1" to_op="Decision Tree (5)" to_port="training set"/>
+          <connect from_port="train 2" to_op="Gradient Boosted Trees" to_port="training set"/>
+          <connect from_port="train 3" to_op="Random Forest (3)" to_port="training set"/>
+          <connect from_op="Decision Tree (5)" from_port="model" to_port="model 1"/>
+          <connect from_op="Random Forest (3)" from_port="model" to_port="model 3"/>
+          <connect from_op="Gradient Boosted Trees" from_port="model" to_port="model 2"/>
+          <portSpacing port="source_train 1" spacing="0"/>
+          <portSpacing port="source_train 2" spacing="0"/>
+          <portSpacing port="source_train 3" spacing="0"/>
+          <portSpacing port="source_train 4" spacing="0"/>
+          <portSpacing port="sink_model 1" spacing="0"/>
+          <portSpacing port="sink_model 2" spacing="0"/>
+          <portSpacing port="sink_model 3" spacing="0"/>
+          <portSpacing port="sink_model 4" spacing="0"/>
+          <description align="center" color="yellow" colored="false" height="105" resized="false" width="180" x="3489" y="331">Type your comment</description>
+          <description align="center" color="yellow" colored="false" height="105" resized="false" width="180" x="3432" y="334">Type your comment</description>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="10.5.000" expanded="true" height="145" name="Cross Validation (2)" width="90" x="3663" y="34">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="automatic"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="multiply" compatibility="10.5.000" expanded="true" height="103" name="Multiply" width="90" x="45" y="34"/>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.5.000" expanded="true" height="103" name="Decision Tree (2)" width="90" x="313" y="34">
+            <parameter key="criterion" value="gain_ratio"/>
+            <parameter key="maximal_depth" value="20"/>
+            <parameter key="apply_pruning" value="true"/>
+            <parameter key="confidence" value="0.1"/>
+            <parameter key="apply_prepruning" value="true"/>
+            <parameter key="minimal_gain" value="0.01"/>
+            <parameter key="minimal_leaf_size" value="20"/>
+            <parameter key="minimal_size_for_split" value="50"/>
+            <parameter key="number_of_prepruning_alternatives" value="3"/>
+          </operator>
+          <operator activated="true" class="optimize_selection_evolutionary" compatibility="10.5.000" expanded="true" height="103" name="Optimize Selection (Evolutionary)" width="90" x="179" y="238">
+            <parameter key="use_exact_number_of_attributes" value="false"/>
+            <parameter key="restrict_maximum" value="false"/>
+            <parameter key="min_number_of_attributes" value="1"/>
+            <parameter key="max_number_of_attributes" value="1"/>
+            <parameter key="exact_number_of_attributes" value="1"/>
+            <parameter key="initialize_with_input_weights" value="false"/>
+            <parameter key="population_size" value="5"/>
+            <parameter key="maximum_number_of_generations" value="30"/>
+            <parameter key="use_early_stopping" value="false"/>
+            <parameter key="generations_without_improval" value="2"/>
+            <parameter key="normalize_weights" value="true"/>
+            <parameter key="use_local_random_seed" value="false"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="user_result_individual_selection" value="false"/>
+            <parameter key="show_population_plotter" value="false"/>
+            <parameter key="plot_generations" value="10"/>
+            <parameter key="constraint_draw_range" value="false"/>
+            <parameter key="draw_dominated_points" value="true"/>
+            <parameter key="maximal_fitness" value="Infinity"/>
+            <parameter key="selection_scheme" value="tournament"/>
+            <parameter key="tournament_size" value="0.25"/>
+            <parameter key="start_temperature" value="1.0"/>
+            <parameter key="dynamic_selection_pressure" value="true"/>
+            <parameter key="keep_best_individual" value="false"/>
+            <parameter key="save_intermediate_weights" value="false"/>
+            <parameter key="intermediate_weights_generations" value="10"/>
+            <parameter key="p_initialize" value="0.5"/>
+            <parameter key="p_mutation" value="-1.0"/>
+            <parameter key="p_crossover" value="0.5"/>
+            <parameter key="crossover_type" value="uniform"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:cross_validation" compatibility="10.5.000" expanded="true" height="145" name="Cross Validation" width="90" x="112" y="34">
+                <parameter key="split_on_batch_attribute" value="false"/>
+                <parameter key="leave_one_out" value="false"/>
+                <parameter key="number_of_folds" value="10"/>
+                <parameter key="sampling_type" value="automatic"/>
+                <parameter key="use_local_random_seed" value="false"/>
+                <parameter key="local_random_seed" value="1992"/>
+                <parameter key="enable_parallel_execution" value="true"/>
+                <process expanded="true">
+                  <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="10.5.000" expanded="true" height="103" name="Decision Tree" width="90" x="179" y="34">
+                    <parameter key="criterion" value="gain_ratio"/>
+                    <parameter key="maximal_depth" value="10"/>
+                    <parameter key="apply_pruning" value="true"/>
+                    <parameter key="confidence" value="0.1"/>
+                    <parameter key="apply_prepruning" value="true"/>
+                    <parameter key="minimal_gain" value="0.01"/>
+                    <parameter key="minimal_leaf_size" value="2"/>
+                    <parameter key="minimal_size_for_split" value="4"/>
+                    <parameter key="number_of_prepruning_alternatives" value="3"/>
+                  </operator>
+                  <connect from_port="training set" to_op="Decision Tree" to_port="training set"/>
+                  <connect from_op="Decision Tree" from_port="model" to_port="model"/>
+                  <portSpacing port="source_training set" spacing="0"/>
+                  <portSpacing port="sink_model" spacing="0"/>
+                  <portSpacing port="sink_through 1" spacing="0"/>
+                </process>
+                <process expanded="true">
+                  <operator activated="true" class="apply_model" compatibility="10.5.000" expanded="true" height="82" name="Apply Model" width="90" x="45" y="34">
+                    <list key="application_parameters"/>
+                  </operator>
+                  <operator activated="true" class="performance_binominal_classification" compatibility="10.5.000" expanded="true" height="82" name="Performance" width="90" x="246" y="34">
+                    <parameter key="manually_set_positive_class" value="false"/>
+                    <parameter key="main_criterion" value="first"/>
+                    <parameter key="accuracy" value="true"/>
+                    <parameter key="classification_error" value="false"/>
+                    <parameter key="kappa" value="false"/>
+                    <parameter key="AUC (optimistic)" value="false"/>
+                    <parameter key="AUC" value="true"/>
+                    <parameter key="AUC (pessimistic)" value="false"/>
+                    <parameter key="precision" value="true"/>
+                    <parameter key="recall" value="true"/>
+                    <parameter key="lift" value="true"/>
+                    <parameter key="fallout" value="false"/>
+                    <parameter key="f_measure" value="true"/>
+                    <parameter key="false_positive" value="true"/>
+                    <parameter key="false_negative" value="true"/>
+                    <parameter key="true_positive" value="true"/>
+                    <parameter key="true_negative" value="true"/>
+                    <parameter key="sensitivity" value="false"/>
+                    <parameter key="specificity" value="false"/>
+                    <parameter key="youden" value="false"/>
+                    <parameter key="positive_predictive_value" value="false"/>
+                    <parameter key="negative_predictive_value" value="false"/>
+                    <parameter key="psep" value="false"/>
+                    <parameter key="skip_undefined_labels" value="true"/>
+                    <parameter key="use_example_weights" value="true"/>
+                  </operator>
+                  <connect from_port="model" to_op="Apply Model" to_port="model"/>
+                  <connect from_port="test set" to_op="Apply Model" to_port="unlabelled data"/>
+                  <connect from_op="Apply Model" from_port="labelled data" to_op="Performance" to_port="labelled data"/>
+                  <connect from_op="Performance" from_port="performance" to_port="performance 1"/>
+                  <connect from_op="Performance" from_port="example set" to_port="test set results"/>
+                  <portSpacing port="source_model" spacing="0"/>
+                  <portSpacing port="source_test set" spacing="0"/>
+                  <portSpacing port="source_through 1" spacing="0"/>
+                  <portSpacing port="sink_test set results" spacing="0"/>
+                  <portSpacing port="sink_performance 1" spacing="0"/>
+                  <portSpacing port="sink_performance 2" spacing="0"/>
+                </process>
+              </operator>
+              <connect from_port="example set" to_op="Cross Validation" to_port="example set"/>
+              <connect from_op="Cross Validation" from_port="performance 1" to_port="performance"/>
+              <portSpacing port="source_example set" spacing="0"/>
+              <portSpacing port="source_through 1" spacing="0"/>
+              <portSpacing port="sink_performance" spacing="0"/>
+            </process>
+          </operator>
+          <connect from_port="training set" to_op="Multiply" to_port="input"/>
+          <connect from_op="Multiply" from_port="output 1" to_op="Decision Tree (2)" to_port="training set"/>
+          <connect from_op="Multiply" from_port="output 2" to_op="Optimize Selection (Evolutionary)" to_port="example set in"/>
+          <connect from_op="Decision Tree (2)" from_port="model" to_port="model"/>
+          <connect from_op="Optimize Selection (Evolutionary)" from_port="weights" to_port="through 1"/>
+          <portSpacing port="source_training set" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+          <portSpacing port="sink_through 2" spacing="0"/>
+          <description align="center" color="yellow" colored="false" height="69" resized="true" width="203" x="126" y="358">Using Optimize Selection Operator for better performance</description>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="10.5.000" expanded="true" height="82" name="Apply Model (2)" width="90" x="112" y="34">
+            <list key="application_parameters"/>
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="10.5.000" expanded="true" height="82" name="Performance (3)" width="90" x="313" y="289">
+            <parameter key="manually_set_positive_class" value="false"/>
+            <parameter key="main_criterion" value="first"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="classification_error" value="false"/>
+            <parameter key="kappa" value="false"/>
+            <parameter key="AUC (optimistic)" value="false"/>
+            <parameter key="AUC" value="true"/>
+            <parameter key="AUC (pessimistic)" value="false"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="lift" value="true"/>
+            <parameter key="fallout" value="false"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="false_positive" value="true"/>
+            <parameter key="false_negative" value="true"/>
+            <parameter key="true_positive" value="true"/>
+            <parameter key="true_negative" value="true"/>
+            <parameter key="sensitivity" value="false"/>
+            <parameter key="specificity" value="false"/>
+            <parameter key="youden" value="false"/>
+            <parameter key="positive_predictive_value" value="false"/>
+            <parameter key="negative_predictive_value" value="false"/>
+            <parameter key="psep" value="false"/>
+            <parameter key="skip_undefined_labels" value="true"/>
+            <parameter key="use_example_weights" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (2)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (2)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (2)" from_port="labelled data" to_op="Performance (3)" to_port="labelled data"/>
+          <connect from_op="Performance (3)" from_port="performance" to_port="performance 1"/>
+          <connect from_op="Performance (3)" from_port="example set" to_port="test set results"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="source_through 2" spacing="0"/>
+          <portSpacing port="sink_test set results" spacing="0"/>
+          <portSpacing port="sink_performance 1" spacing="0"/>
+          <portSpacing port="sink_performance 2" spacing="0"/>
+        </process>
+      </operator>
+      <operator activated="true" class="create_lift_chart" compatibility="10.5.000" expanded="true" height="103" name="Create Lift Chart" width="90" x="3864" y="136">
+        <parameter key="target_class" value="true"/>
+        <parameter key="binning_type" value="frequency"/>
+        <parameter key="number_of_bins" value="10"/>
+        <parameter key="size_of_bins" value="1000"/>
+        <parameter key="automatic_number_of_digits" value="true"/>
+        <parameter key="number_of_digits" value="-1"/>
+        <parameter key="show_bar_labels" value="true"/>
+        <parameter key="show_cumulative_labels" value="false"/>
+        <parameter key="rotate_labels" value="false"/>
+      </operator>
+      <connect from_op="Retrieve telecom_customer_churn" from_port="output" to_op="Numerical to Polynominal (2)" to_port="example set input"/>
+      <connect from_op="Numerical to Polynominal (2)" from_port="example set output" to_op="Nominal to Binominal" to_port="example set input"/>
+      <connect from_op="Nominal to Binominal" from_port="example set output" to_op="Join" to_port="left"/>
+      <connect from_op="Retrieve telecom_zipcode_population" from_port="output" to_op="Numerical to Polynominal" to_port="example set input"/>
+      <connect from_op="Numerical to Polynominal" from_port="example set output" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Generate ID" to_port="example set input"/>
+      <connect from_op="Generate ID" from_port="example set output" to_op="Senior_Citizen Indicator" to_port="table input"/>
+      <connect from_op="Senior_Citizen Indicator" from_port="table output" to_op="Replace Missing Values" to_port="example set input"/>
+      <connect from_op="Replace Missing Values" from_port="example set output" to_op="Replace Missing Values (2)" to_port="example set input"/>
+      <connect from_op="Replace Missing Values (2)" from_port="example set output" to_op="Replace Missing Values (4)" to_port="example set input"/>
+      <connect from_op="Replace Missing Values (4)" from_port="example set output" to_op="Rename" to_port="example set input"/>
+      <connect from_op="Rename" from_port="example set output" to_op="Generate Attributes" to_port="table input"/>
+      <connect from_op="Generate Attributes" from_port="table output" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_op="Rename (2)" to_port="example set input"/>
+      <connect from_op="Rename (2)" from_port="example set output" to_op="Guess Types" to_port="example set input"/>
+      <connect from_op="Guess Types" from_port="example set output" to_op="compute number of service" to_port="table input"/>
+      <connect from_op="compute number of service" from_port="table output" to_op="Generate Attributes (2)" to_port="table input"/>
+      <connect from_op="Generate Attributes (2)" from_port="table output" to_op="Discretize" to_port="example set input"/>
+      <connect from_op="Discretize" from_port="example set output" to_op="Discretize (2)" to_port="example set input"/>
+      <connect from_op="Discretize (2)" from_port="example set output" to_op="Discretize (3)" to_port="example set input"/>
+      <connect from_op="Discretize (3)" from_port="example set output" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_op="Generate Attributes (3)" to_port="table input"/>
+      <connect from_op="Generate Attributes (3)" from_port="table output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Shuffle" to_port="example set input"/>
+      <connect from_op="Shuffle" from_port="example set output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Multiply (2)" to_port="input"/>
+      <connect from_op="Multiply (2)" from_port="output 1" to_op="Cross Validation (2)" to_port="example set"/>
+      <connect from_op="Multiply (2)" from_port="output 2" to_op="Compare ROCs" to_port="example set"/>
+      <connect from_op="Compare ROCs" from_port="rocComparison" to_port="result 5"/>
+      <connect from_op="Cross Validation (2)" from_port="model" to_op="Create Lift Chart" to_port="model"/>
+      <connect from_op="Cross Validation (2)" from_port="example set" to_op="Create Lift Chart" to_port="example set"/>
+      <connect from_op="Cross Validation (2)" from_port="test result set" to_port="result 3"/>
+      <connect from_op="Cross Validation (2)" from_port="performance 1" to_port="result 1"/>
+      <connect from_op="Create Lift Chart" from_port="example set" to_port="result 6"/>
+      <connect from_op="Create Lift Chart" from_port="model" to_port="result 4"/>
+      <connect from_op="Create Lift Chart" from_port="lift pareto chart" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <portSpacing port="sink_result 5" spacing="0"/>
+      <portSpacing port="sink_result 6" spacing="0"/>
+      <portSpacing port="sink_result 7" spacing="0"/>
+      <description align="center" color="yellow" colored="false" height="67" resized="false" width="126" x="440" y="289">Joining Churn table with Zipcode table</description>
+      <description align="center" color="yellow" colored="false" height="74" resized="true" width="156" x="686" y="10">Creating new column 'Senior Citizen' from existing age column</description>
+      <description align="center" color="yellow" colored="false" height="51" resized="true" width="371" x="854" y="217">Replacing the missing values with 'None','No' and '0' for particular columns as required</description>
+      <description align="center" color="yellow" colored="false" height="85" resized="false" width="126" x="1372" y="182">Generating some indicator attributes for the ease of our model</description>
+      <description align="center" color="yellow" colored="false" height="85" resized="true" width="165" x="1878" y="183">Creating a new column based on total number of services opted by the customers</description>
+      <description align="center" color="yellow" colored="false" height="67" resized="true" width="160" x="2040" y="10">Generating some more indicator attributes for the ease of our model</description>
+      <description align="center" color="yellow" colored="false" height="50" resized="true" width="269" x="2285" y="207">Binning/Grouping the necessary columns</description>
+      <description align="center" color="yellow" colored="false" height="68" resized="true" width="147" x="2709" y="10">Removing the 'Joined' customer status as its less significant</description>
+      <description align="center" color="yellow" colored="false" height="50" resized="true" width="163" x="3089" y="174">Setting the target label</description>
+      <description align="center" color="yellow" colored="false" height="67" resized="true" width="189" x="3604" y="333">Comparing ROC to determine which model to select for analysis</description>
+    </process>
+  </operator>
+</process>
